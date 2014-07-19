@@ -8,20 +8,18 @@ import RPi.GPIO as GPIO
 from time import sleep
 
 # Define sensor channels
-light_channel = 7
+light_channel =8
 temp_channel=0
+tilt_switch=18
+motor=3
 
 # Define delay between readings
-delay = 5
+delay = 1
 
-# set up LED 
-led_temp=2
-led_light=3
+# set up motor 
 GPIO.setmode(GPIO.BCM)
-GPIO.setup(led_temp,GPIO.OUT)
-GPIO.setup(led_light,GPIO.OUT)
-GPIO.output(led_light,False)
-GPIO.output(led_temp,False)
+GPIO.setup(motor,GPIO.OUT)
+GPIO.output(motor,GPIO.HIGH)
 
 class Adafruit_CharLCD:
 
@@ -306,41 +304,48 @@ def ConvertTemp(data,places):
   temp = round(temp,places)
   return temp
 
-def led():
-	if temp >= 27:
-		GPIO.output(led_temp,True)
-	elif temp<27:
-		GPIO.output(led_temp,False)
-	
-	if light_level>500:
-		GPIO.output(led_light,True)
-	elif light_level:
-		GPIO.output(led_light,False)
+def wheel():
+	GPIO.setup(motor,GPIO.OUT)
+	GPIO.setup(tilt_switch,GPIO.IN,pull_up_down=GPIO.PUD_UP)
+	if (GPIO.input(tilt_switch)==False):
+		print('Up')
+		GPIO.output(motor,False)
+		time.sleep(0.2)
+	elif((GPIO.input(tilt_switch)==True) or (temp>=27)):
+		print('Down')
+		GPIO.output(motor,True)
+		time.sleep(0.2)
 
 #if __name__ == '__main__':
-while True:
+try:
+	while True:
 
 	# Read the light sensor data
-	light_level = ReadChannel(light_channel)
-	light_volts = ConvertVolts(light_level,2)
+		light_level = ReadChannel(light_channel)
+		light_volts = ConvertVolts(light_level,2)
 
 	# Read the temperature sensor data
-	temp_level = ReadChannel(temp_channel)
-	temp_volts = ConvertVolts(temp_level,2)
-	temp       = ConvertTemp(temp_level,2)
+		temp_level = ReadChannel(temp_channel)
+		temp_volts = ConvertVolts(temp_level,2)
+		temp       = ConvertTemp(temp_level,2)
 	
-	lcd = Adafruit_CharLCD()
-	lcd.clear()
-	lcd.message("Light %s \n" % (light_level))
-	lcd.message("Temp  %s" % (temp) + ' C')
+		lcd = Adafruit_CharLCD()
+		lcd.clear()
+		lcd.message("Light %s \n" % (light_level))
+		lcd.message("Temp  %s" % (temp) + ' C')
 
 	# Print out results
-	print "--------------------------------------------"  
-	print("Light : {} ({}V)".format(light_level,light_volts))  
-	print("Temp  : {} ({}V) {} C".format(temp_level,temp_volts,temp))  
+	#print "--------------------------------------------"  
+	#print("Light : {} ({}V)".format(light_level,light_volts))  
+	#print("Temp  : {} ({}V) {} C".format(temp_level,temp_volts,temp))  
 	
 	#LED signal
-	led()
+		wheel()
 
 	# Wait before repeating loop
-	time.sleep(delay)
+		time.sleep(delay)
+
+except KeyboardInterrupt:
+	print('Stop')
+	time.sleep(0.2)
+	GPIO.output(motor,False)
