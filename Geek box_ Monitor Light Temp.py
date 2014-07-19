@@ -8,7 +8,7 @@ import RPi.GPIO as GPIO
 from time import sleep
 
 # Define sensor channels
-light_channel = 7
+light_channel = 8
 temp_channel=0
 
 # Define delay between readings
