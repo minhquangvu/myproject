@@ -38,7 +38,8 @@ def reading():
 		# measurement. So now we convert this distance into centimetres
 		distance = 0.5*timepassed * 34029-1.00
 		distance=round(distance,2)
-
+                count()
+                
 def count():
 	if distance<115 and distance>90:
 		time.sleep(2)
