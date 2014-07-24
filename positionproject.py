@@ -10,7 +10,7 @@ frequency=50
 servo=9
 buzz=10
 
-def position_control():
+def position_control():                                            #tilt_switch code
 	GPIO.setup(led,GPIO.OUT)
 	GPIO.setup(tilt_switch,GPIO.IN,pull_up_down=GPIO.PUD_UP)
 	if GPIO.input(tilt_switch)==False:
@@ -24,7 +24,7 @@ def position_control():
 		GPIO.output(led,False)
 		GPIO.output(buzz,False)
 
-def dutycycle_calculate():
+def dutycycle_calculate():                                           #servo code
 	clockwise=0.75 #in second
 	anticlockwise=2.5
 	initial=(anticlockwise-clockwise)/2+clockwise
