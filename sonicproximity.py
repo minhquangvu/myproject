@@ -1,6 +1,3 @@
-# GPIO output = the pin that's connected to "Trig" on the sensor
-# GPIO input = the pin that's connected to "Echo" on the sensor
-
 import time
 import RPi.GPIO as GPIO
 
@@ -15,12 +12,11 @@ GPIO.setup(trig,GPIO.OUT)
 GPIO.setup(echo,GPIO.IN)
 GPIO.setup(buzzer,GPIO.OUT)
 
+enter_number=0
+
 def reading():
 		GPIO.output(trig, False)
-		
-		# found that the sensor can crash if there isn't a delay here
-		# no idea why. If you have odd crashing issues, increase delay
-		time.sleep(0.5)
+		time.sleep(0.3)
 		
 		GPIO.output(trig, True)
 		# wait 10 micro seconds (this is 0.00001 seconds) so the pulse
@@ -42,14 +38,14 @@ def reading():
 		# measurement. So now we convert this distance into centimetres
 		distance = 0.5*timepassed * 34029-1.00
 		distance=round(distance,2)
-		
-		# return the distance of an object in front of the sensor in cm
-		#print 'Distance in cm is ',distance
 
-			
-		if distance<185 and distance>70:
-			print'Someone Enters'
-			print 'Distance in cm is ',distance
+def count():
+	if distance<115 and distance>90:
+		time.sleep(2)
+		enter_number+=1
+		print'Someone Enters'
+		print 'Distance in cm is ',distance
+		print 'Number: ',enter_number
 			for i in range(0,3):
 				GPIO.output(buzzer,True)
 				time.sleep(0.2)
