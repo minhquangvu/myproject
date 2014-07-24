@@ -38,15 +38,16 @@ def reading():
 		# measurement. So now we convert this distance into centimetres
 		distance = 0.5*timepassed * 34029-1.00
 		distance=round(distance,2)
+		if distance<115 and distance>90:
+			count()
 
 def count():
-	if distance<115 and distance>90:
 		time.sleep(2)
 		enter_number+=1
 		print'Someone Enters'
 		print 'Distance in cm is ',distance
 		print 'Number: ',enter_number
-			for i in range(0,3):
+		for i in range(0,3):
 				GPIO.output(buzzer,True)
 				time.sleep(0.2)
 				GPIO.output(buzzer,False)
