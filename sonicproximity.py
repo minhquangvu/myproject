@@ -40,12 +40,13 @@ def reading():
 		distance=round(distance,2)
 		if distance<115 and distance>90:
 			count()
+			print 'Distance in cm is ',distance
 
 def count():
+		global enter_number
 		time.sleep(2)
 		enter_number+=1
 		print'Someone Enters'
-		print 'Distance in cm is ',distance
 		print 'Number: ',enter_number
 		for i in range(0,3):
 				GPIO.output(buzzer,True)
